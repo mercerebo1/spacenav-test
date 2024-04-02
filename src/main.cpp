@@ -1,7 +1,7 @@
 #include <memory> //dynamic memory management library
 #include <mutex> //mutual exclusion primitives
 
-//orocos kdl library
+// Orocos KDL library
 #include <kdl/chain.hpp> //A kinematic chain is a connection of rigid bodies and joints that creates a kinematic chain from a base to a tip.
 #include <kdl/chainiksolvervel_pinv.hpp> //Inverse velocity kinematics solver
 
