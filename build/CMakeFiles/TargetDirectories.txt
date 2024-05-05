@@ -1,0 +1,10 @@
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/uninstall.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/spacenav-test_uninstall.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/spacenav-test.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/test.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/edit_cache.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/rebuild_cache.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/list_install_components.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/install.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/install/local.dir
+/home/merce/ros2_ws/src/spacenav-test/build/CMakeFiles/install/strip.dir

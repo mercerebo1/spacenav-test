@@ -1,35 +1,7 @@
-#include <memory> //dynamic memory management library
-#include <mutex> //mutual exclusion primitives
+/***** For this example, DH data for Teo's right arm is used. ******/
 
-// Orocos KDL library
-#include <kdl/chain.hpp> //A kinematic chain is a connection of rigid bodies and joints that creates a kinematic chain from a base to a tip.
-#include <kdl/chainiksolvervel_pinv.hpp> //Inverse velocity kinematics solver
+/* The following is the content of the "teo-fixedTrunk-rightArm-fetch.ini" file:
 
-#include "rclcpp/rclcpp.hpp" //ROS Client Library for C++
-#include "geometry_msgs/msg/twist.hpp"  //geometry_msgs is a set of messages used to interact with the world.
-#include "sensor_msgs/msg/joint_state.hpp" //sensor_msgs is a set of messages used to transport sensor data.
-#include "yarp_control_msgs/msg/position_direct.hpp" //controlBoard_nws_ros2 Directory Reference
-
-constexpr auto EPS = 1e-3; 
-constexpr auto MAX_ITER = 1000; 
-constexpr auto SCALE = 1e-2; 
-constexpr auto PREFIX = "/teoSim/rightArm"; 
-
-class MinimalSubscriber : public rclcpp::Node
-{
-  public:
-    MinimalSubscriber()
-    : Node("minimal_subscriber")
-    {
-      using std::placeholders::_1;
-      subscription_spnav_ = this->create_subscription<geometry_msgs::msg::Twist>("/spacenav/twist", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
-      
-      KDL::Joint axis(KDL::Joint::RotZ); //Rotational joint about the Z-axis
-      KDL::Joint fixed(KDL::Joint(KDL::Joint::None)); //Fixed joint - cannot move or rotate
-      KDL::Frame H0(KDL::Rotation(0, 1, 0, 0, 0, 1, 1, 0, 0), KDL::Vector(0.0, -0.3469, 0.4982));
-      KDL::Frame HN(KDL::Rotation(0, 0, -1, -1, 0, 0, 0, 1, 0), KDL::Vector(-0.0975, 0.0, 0.0));
-
-    /*/// teo-fixedTrunk-rightArm-fetch.ini
 
 // dh-root-rightArm.csv
 H0 (0 1 0 0    0 0 1 -0.3469    1 0 0 0.4982    0 0 0 1)
@@ -47,6 +19,35 @@ link_5 (offset -90.0) (D  0.0    ) (A -0.09     ) (alpha   0.0) (mass 0.300   ) 
 // dh-fetch.csv
 HN (0 0 -1 -0.0975  -1 0 0 0    0 1 0 0    0 0 0 1) */
 
+#include <memory> 
+#include <mutex> 
+
+#include <kdl/chain.hpp> 
+#include <kdl/chainiksolvervel_pinv.hpp> 
+
+#include <rclcpp/rclcpp.hpp> 
+#include <geometry_msgs/msg/twist.hpp> 
+#include <sensor_msgs/msg/joint_state.hpp> 
+#include <yarp_control_msgs/msg/position_direct.hpp> 
+
+constexpr auto EPS = 1e-3; 
+constexpr auto MAX_ITER = 1000; 
+constexpr auto SCALE = 1e-2; 
+constexpr auto PREFIX = "/teoSim/rightArm"; 
+
+class MinimalSubscriber : public rclcpp::Node
+{
+  public:
+    MinimalSubscriber()
+    : Node("minimal_subscriber")
+    {
+      using std::placeholders::_1;
+      subscription_spnav_ = this->create_subscription<geometry_msgs::msg::Twist>("/spacenav/twist", 10, std::bind(&MinimalSubscriber::topic_callback, this, _1));
+      
+      KDL::Joint axis(KDL::Joint::RotZ); 
+      KDL::Joint fixed(KDL::Joint(KDL::Joint::None)); //Fixed joint - cannot move or rotate
+      KDL::Frame H0(KDL::Rotation(0, 1, 0, 0, 0, 1, 1, 0, 0), KDL::Vector(0.0, -0.3469, 0.4982));
+      KDL::Frame HN(KDL::Rotation(0, 0, -1, -1, 0, 0, 0, 1, 0), KDL::Vector(-0.0975, 0.0, 0.0));
   
       chain.addSegment(KDL::Segment(fixed, H0));
       chain.addSegment(KDL::Segment(axis, KDL::Frame::DH(0.0, KDL::deg2rad * -90.0, 0.0, KDL::deg2rad * 0.0)));
@@ -69,7 +70,7 @@ HN (0 0 -1 -0.0975  -1 0 0 0    0 1 0 0    0 0 0 1) */
     }
         
   private:
-    void topic_callback(const geometry_msgs::msg::Twist::SharedPtr msg) const //A callback function that is called when a message is received
+    void topic_callback(const geometry_msgs::msg::Twist::SharedPtr msg) const 
     {
       RCLCPP_INFO(this->get_logger(), "spnav: [%f %f %f] [%f %f %f]",
                   msg->linear.x, msg->linear.y, msg->linear.z,
@@ -125,20 +126,14 @@ HN (0 0 -1 -0.0975  -1 0 0 0    0 1 0 0    0 0 0 1) */
                        q(0) * KDL::rad2deg, q(1) * KDL::rad2deg, q(2) * KDL::rad2deg, q(3) * KDL::rad2deg, q(4) * KDL::rad2deg, q(5) * KDL::rad2deg);
     }
 
-    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscription_spnav_; //A subscription to a topic that represents velocity in free space
-    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscription_state_; //A subscription to a topic that represents the state of the joint (current position, velocity, effort, etc.)
-    rclcpp::Publisher<yarp_control_msgs::msg::PositionDirect>::SharedPtr publisher_position_; //A publisher to a topic that represents the direct position of the joint
+    rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr subscription_spnav_; 
+    rclcpp::Subscription<sensor_msgs::msg::JointState>::SharedPtr subscription_state_; 
+    rclcpp::Publisher<yarp_control_msgs::msg::PositionDirect>::SharedPtr publisher_position_; 
 
     KDL::Chain chain;
-    /**
-
-     * This pointer is used to store the instance of the KDL::ChainIkSolverVel_pinv class,
-     * which is responsible for solving the inverse kinematics problem for a given chain
-     * using the pseudo-inverse method.
-     */
     KDL::ChainIkSolverVel_pinv * ikSolverVel {nullptr};
     KDL::JntArray q;
-
+    
     mutable std::mutex mtx;
 };
 
@@ -149,3 +144,5 @@ int main(int argc, char * argv[])
   rclcpp::shutdown();
   return 0;
 }
+
+
