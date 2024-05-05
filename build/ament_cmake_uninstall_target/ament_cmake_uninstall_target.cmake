@@ -29,7 +29,11 @@ function(ament_cmake_uninstall_target_remove_empty_directories path)
 endfunction()
 
 # uninstall files installed using the standard install() function
+<<<<<<< HEAD
 set(install_manifest "/home/merce/ros2_ws/src/spacenav-test/build/install_manifest.txt")
+=======
+set(install_manifest "/home/merce/Documents/GitHub/spacenav-test/build/install_manifest.txt")
+>>>>>>> a595ea93ac26c0d6da7f29cba2bae734478470e9
 if(NOT EXISTS "${install_manifest}")
   message(FATAL_ERROR "Cannot find install manifest: ${install_manifest}")
 endif()

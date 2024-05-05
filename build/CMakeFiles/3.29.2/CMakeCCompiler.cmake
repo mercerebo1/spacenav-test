@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-set(CMAKE_C_COMPILER "/usr/bin/cc")
-=======
 set(CMAKE_C_COMPILER "/usr/bin/gcc")
->>>>>>> a595ea93ac26c0d6da7f29cba2bae734478470e9
 set(CMAKE_C_COMPILER_ARG1 "")
 set(CMAKE_C_COMPILER_ID "GNU")
 set(CMAKE_C_COMPILER_VERSION "11.4.0")
