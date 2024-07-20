@@ -1,6 +1,6 @@
-/***** For this example, DH data for Teo's right arm is used. ******/
+/***** Test example to teleoperate TEO's right arm with 3D SpaceMouse , DH data for Teo's right arm is used. ******/
 
-/* The following is the content of the "teo-fixedTrunk-rightArm-fetch.ini" file:
+/***** DH data for TEO's right arm is applied using "teo-fixedTrunk-rightArm-fetch.ini" file. /***** 
 
 
 // dh-root-rightArm.csv
