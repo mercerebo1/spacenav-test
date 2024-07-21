@@ -1,4 +1,4 @@
-/***** Test example to teleoperate TEO's right arm with 3D SpaceMouse , DH data for Teo's right arm is used. ******/
+/***** Test example to teleoperate TEO humanoid's right arm with 3D SpaceMouse , DH data for Teo's right arm is used. ******/
 
 /***** DH data for TEO's right arm is applied using "teo-fixedTrunk-rightArm-fetch.ini" file. /***** 
 
@@ -85,7 +85,7 @@ class MinimalSubscriber : public rclcpp::Node
       KDL::Twist tw(vel, rot);
       KDL::JntArray qdot(chain.getNrOfJoints());  
 
-      if (ikSolverVel->CartToJnt(qd, tw, qdot) != KDL::SolverI::E_NOERROR)
+      if (ikSolverVel->CartToJnt(qd, tw, qdot) == KDL::SolverI::E_NOERROR)
       {
         RCLCPP_WARN(this->get_logger(), "Something bad happened");
       }
